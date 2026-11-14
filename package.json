@@ -1,0 +1,20 @@
+{
+  "name": "siyam-whatsapp-goatbot",
+  "version": "1.0.0",
+  "description": "WhatsApp GoatBot by 𝗦𝗜𝗬𝗔𝗠 𝗛𝗔𝗦𝗔𝗡",
+  "main": "index.js",
+  "author": "𝗦𝗜𝗬𝗔𝗠 𝗛𝗔𝗦𝗔𝗡",
+  "license": "MIT",
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "scripts": {
+    "start": "node index.js",
+    "dev": "node --watch index.js"
+  },
+  "dependencies": {
+    "@whiskeysockets/baileys": "^6.7.18",
+    "express": "^4.21.2",
+    "pino": "^9.6.0"
+  }
+}
