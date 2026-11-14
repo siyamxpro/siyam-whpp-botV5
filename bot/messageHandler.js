@@ -1,34 +1,20 @@
-/**
- * @author 𝗦𝗜𝗬𝗔𝗠 𝗛𝗔𝗦𝗔𝗡
- */
 'use strict';
 
 const log = require('../logger/log');
 const commands = require('../scripts/cmds');
 const handlerCheckData = require('./handler/handlerCheckData');
 
-module.exports = async function handleMessage(
-    sock,
-    message,
-    config
-) {
-    if (!message?.message || message.key?.fromMe) {
-        return;
-    }
+module.exports = async function handleMessage(sock, message, config) {
+    if (!message?.message || message.key?.fromMe) return;
 
     const jid = message.key.remoteJid;
 
-    if (!jid || jid === 'status@broadcast') {
-        return;
-    }
+    if (!jid || jid === 'status@broadcast') return;
 
     try {
         await handlerCheckData(message);
     } catch (error) {
-        log.error(
-            'DATABASE',
-            error.stack || error.message
-        );
+        log.error('DATABASE', error.stack || error.message);
     }
 
     const sender = message.key.participant || jid;
@@ -39,55 +25,31 @@ module.exports = async function handleMessage(
 
     const text = extractText(message.message).trim();
 
-    if (!text) {
-        return;
-    }
+    if (!text) return;
 
-    const ownerNumber = String(
-        config.ownerNumber || ''
-    ).replace(/\D/g, '');
+    const ownerNumber = String(config.ownerNumber || '').replace(/\D/g, '');
 
-    const adminNumbers = (
-        config.adminNumbers || []
-    ).map(number =>
-        String(number).replace(/\D/g, '')
-    );
+    const adminNumbers = (config.adminNumbers || [])
+        .map(number => String(number).replace(/\D/g, ''));
 
-    const isOwner =
-        Boolean(ownerNumber) &&
-        senderNumber === ownerNumber;
-
-    const isAdmin =
-        isOwner ||
-        adminNumbers.includes(senderNumber);
+    const isOwner = Boolean(ownerNumber) && senderNumber === ownerNumber;
+    const isAdmin = isOwner || adminNumbers.includes(senderNumber);
 
     if (config.whiteListMode?.enable) {
-        const allowedNumbers = (
-            config.whiteListMode.whiteListIds || []
-        ).map(number =>
-            String(number).replace(/\D/g, '')
-        );
+        const allowedNumbers = (config.whiteListMode.whiteListIds || [])
+            .map(number => String(number).replace(/\D/g, ''));
 
-        if (!allowedNumbers.includes(senderNumber)) {
-            return;
-        }
+        if (!allowedNumbers.includes(senderNumber)) return;
     }
 
     const prefix = config.prefix || ',';
 
-    if (!text.startsWith(prefix)) {
-        return;
-    }
+    if (!text.startsWith(prefix)) return;
 
-    const body = text
-        .slice(prefix.length)
-        .trim();
-
+    const body = text.slice(prefix.length).trim();
     const [commandName, ...args] = body.split(/\s+/);
 
-    if (!commandName) {
-        return;
-    }
+    if (!commandName) return;
 
     const context = {
         sock,
@@ -96,24 +58,17 @@ module.exports = async function handleMessage(
         jid,
         sender,
         senderNumber,
-
         args,
         input: args.join(' '),
-
         commandName: commandName.toLowerCase(),
-
         isOwner,
         isAdmin,
 
         reply: async response => {
             return sock.sendMessage(
                 jid,
-                {
-                    text: String(response)
-                },
-                {
-                    quoted: message
-                }
+                { text: String(response) },
+                { quoted: message }
             );
         }
     };
@@ -121,26 +76,21 @@ module.exports = async function handleMessage(
     const command = commands.get(context.commandName);
 
     if (!command) {
-        log.info(
-            'COMMAND',
-            `Command not registered: ${context.commandName}`
-        );
-
+        log.info('COMMAND', `Command not registered: ${context.commandName}`);
         return;
     }
 
     if (
         config.adminOnly?.enable &&
         !isAdmin &&
-        !(config.adminOnly.ignoreCommand || [])
-            .includes(context.commandName)
+        !(config.adminOnly.ignoreCommand || []).includes(context.commandName)
     ) {
         return;
     }
 
     if (command.adminOnly && !isAdmin) {
         return context.reply(
-            'এই কমান্ডটি শুধু সিয়াম ভাই ব্যবহার করতে পারবেন।'
+            'এই কমান্ডটি শুধু বটের অ্যাডমিন ব্যবহার করতে পারবেন।'
         );
     }
 
@@ -148,9 +98,7 @@ module.exports = async function handleMessage(
 };
 
 function extractText(message) {
-    if (message.conversation) {
-        return message.conversation;
-    }
+    if (message.conversation) return message.conversation;
 
     if (message.extendedTextMessage?.text) {
         return message.extendedTextMessage.text;
@@ -164,10 +112,7 @@ function extractText(message) {
 
     for (const type of mediaTypes) {
         const caption = message[type]?.caption;
-
-        if (caption) {
-            return caption;
-        }
+        if (caption) return caption;
     }
 
     return '';
