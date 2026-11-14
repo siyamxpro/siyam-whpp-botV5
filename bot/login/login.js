@@ -1,7 +1,3 @@
-/**
- * @author 𝗦𝗜𝗬𝗔𝗠 𝗛𝗔𝗦𝗔𝗡
- */
-
 'use strict';
 
 const fs = require('fs');
@@ -17,6 +13,7 @@ const {
 
 const log = require('../../logger/log');
 const handleMessage = require('../messageHandler');
+const registerEvents = require('../../scripts/events');
 
 const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
 
@@ -52,22 +49,22 @@ module.exports = async function startWhatsApp({ config, onState }) {
                 version,
                 auth: state,
                 printQRInTerminal: false,
-
                 logger: pino({
                     level: config.logging?.level || 'info'
                 }),
-
                 browser: [
                     'Siyam WhatsApp Bot',
                     'Chrome',
                     '1.0.0'
                 ],
-
                 markOnlineOnConnect: false,
                 syncFullHistory: false
             });
 
             socket.ev.on('creds.update', saveCreds);
+
+            // Register custom event files
+            registerEvents(socket, { config });
 
             socket.ev.on('connection.update', async update => {
                 const { connection, lastDisconnect } = update;
