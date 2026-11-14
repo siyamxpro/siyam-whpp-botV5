@@ -7,7 +7,7 @@ const path = require('path');
 const JSONStore = require('../jsonStore');
 
 const store = new JSONStore(
-    path.join(__dirname, '..', 'data', 'threads.json')
+    path.join(__dirname, '..', 'data', 'users.json')
 );
 
 module.exports = {
