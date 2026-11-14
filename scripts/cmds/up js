@@ -1,0 +1,57 @@
+
+const os = require("os");
+
+module.exports = {
+  config: {
+    name: "up",
+    aliases: ["uptime", "status", "আপ"],
+    version: "1.0.0",
+    author: "SIYAM",
+    role: 0,
+    description: "Show bot uptime and system status"
+  },
+
+  onStart: async ({ sock, message, config }) => {
+    try {
+      const formatTime = (seconds) => {
+        const days = Math.floor(seconds / 86400);
+        const hours = Math.floor((seconds % 86400) / 3600);
+        const minutes = Math.floor((seconds % 3600) / 60);
+        const secs = Math.floor(seconds % 60);
+
+        return `${days} দিন ${hours} ঘণ্টা ${minutes} মিনিট ${secs} সেকেন্ড`;
+      };
+
+      const uptime = formatTime(process.uptime());
+      const memory = process.memoryUsage();
+      const ramUsed = (memory.rss / 1024 / 1024).toFixed(2);
+      const totalRam = (os.totalmem() / 1024 / 1024 / 1024).toFixed(2);
+      const freeRam = (os.freemem() / 1024 / 1024 / 1024).toFixed(2);
+
+      const text = `╭━━━〔 BOT STATUS 〕━━━╮
+┃
+┃ 🤖 নাম: ${config?.botName || "WhatsApp Bot"}
+┃ ⏱️ চালু আছে: ${uptime}
+┃ 💾 RAM ব্যবহার: ${ramUsed} MB
+┃ 🖥️ মোট RAM: ${totalRam} GB
+┃ 🟢 ফ্রি RAM: ${freeRam} GB
+┃ ⚙️ CPU Core: ${os.cpus().length}
+┃ 📱 Platform: ${os.platform()}
+┃ 🟢 Node.js: ${process.version}
+┃
+╰━━━━━━━━━━━━━━━━━━╯`;
+
+      await sock.sendMessage(
+        message.key.remoteJid,
+        { text },
+        { quoted: message }
+      );
+    } catch (error) {
+      console.error("[UPTIME COMMAND ERROR]", error);
+
+      await sock.sendMessage(message.key.remoteJid, {
+        text: "❌ Uptime দেখাতে সমস্যা হয়েছে।"
+      });
+    }
+  }
+};
