@@ -5,10 +5,10 @@
 
   "prefix": ",",
 
-  "ownerNumber": "8801XXXXXXXXX",
+  "ownerNumber": "15518304043117",
 
   "adminNumbers": [
-    "8801XXXXXXXXX"
+    "8801789138157"
   ],
 
   "adminOnly": {
@@ -19,12 +19,12 @@
   "whiteListMode": {
     "enable": false,
     "whiteListIds": [
-      "8801XXXXXXXXX"
+      "8801789138157"
     ]
   },
 
   "pairing": {
-    "phoneNumber": "8801XXXXXXXXX",
+    "phoneNumber": "8801608279461",
     "printPairingCode": true
   },
 
