@@ -1,0 +1,50 @@
+{
+  "platform": "whatsapp",
+  "author": "𝗦𝗜𝗬𝗔𝗠 𝗛𝗔𝗦𝗔𝗡",
+  "botName": "SIYAM WHATSAPP GOATBOT",
+
+  "prefix": ",",
+
+  "ownerNumber": "8801XXXXXXXXX",
+
+  "adminNumbers": [
+    "8801XXXXXXXXX"
+  ],
+
+  "adminOnly": {
+    "enable": false,
+    "ignoreCommand": []
+  },
+
+  "whiteListMode": {
+    "enable": false,
+    "whiteListIds": [
+      "8801XXXXXXXXX"
+    ]
+  },
+
+  "pairing": {
+    "phoneNumber": "8801XXXXXXXXX",
+    "printPairingCode": true
+  },
+
+  "session": {
+    "directory": "auth_info"
+  },
+
+  "server": {
+    "enabled": true,
+    "port": 3000
+  },
+
+  "autoRestart": {
+    "enabled": false,
+    "delayMs": 3000
+  },
+
+  "logging": {
+    "level": "info"
+  },
+
+  "timeZone": "Asia/Dhaka"
+}
